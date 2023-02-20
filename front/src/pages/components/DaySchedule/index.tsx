@@ -41,9 +41,6 @@ export const DaySchedule: React.FC<{
     for(let j = st.time;j <= endTimes[i]; ++j) {
       fillTimes[j].overlap += 1;
       fillTimes[j].id = st.id;
-      console.log(dayOfWeek);
-      console.log(j)
-      console.log(fillTimes)
     }
   })
   // //予定の重なりの最大値
