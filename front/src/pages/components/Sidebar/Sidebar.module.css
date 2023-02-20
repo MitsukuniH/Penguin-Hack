@@ -1,0 +1,48 @@
+.sidebar {
+  display: flex;
+  flex-direction: column;
+  border-right: 0.5rem double;
+  justify-content: flex-start;
+  align-items: center;
+}
+
+.nav {
+  background-color: rgb(210, 255, 156);
+  height: 5rem;
+  width: 100%;
+  display: grid;
+  justify-content: center;
+  align-items: center;
+  font-size: medium;
+  border-bottom: 0.1rem solid;
+}
+
+.tabBtn {
+  height: 3rem;
+  width: 100%;
+  background-color: rgb(232, 255, 203);
+  display: grid;
+  justify-content: center;
+  align-items: center;
+  font-size: medium;
+  border-bottom: 0.1rem solid;
+  transition: all 0.2s;
+}
+
+.tabBtn:hover {
+  letter-spacing: 0.1rem;
+  background-color: white;
+  cursor: pointer;
+}
+
+.currentTab {
+  height: 3rem;
+  width: calc(100% + 1rem);
+  letter-spacing: 0.1rem;
+  background-color: white;
+  display: grid;
+  justify-content: center;
+  align-items: center;
+  font-size: medium;
+  border-bottom: 0.1rem solid;
+}

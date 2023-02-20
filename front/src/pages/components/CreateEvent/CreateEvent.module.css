@@ -1,0 +1,60 @@
+.createEvent{
+  display: grid;
+  grid-template-columns: 15rem 1fr;
+  height: 100%;
+}
+
+.info{
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  font-size: medium;
+  border-right: 0.5rem double;
+}
+
+.title{
+  background-color: rgb(210, 255, 156);
+  padding: 0.5rem;
+  font-size: large;
+  text-align: center;
+  border-bottom: 0.1rem solid;
+}
+
+.itemName{
+  padding-left: 1rem;
+  padding-top: 0.5rem;
+}
+.itemForm{
+  margin-left: 1rem;
+  margin-right: 1rem;
+}
+.pList {
+  display: flex;
+  flex-direction: column;
+}
+.participant{
+  border: 0.1rem solid;
+  box-sizing: border-box;
+  display: grid;
+  grid-template-columns: 1fr 1.5rem;
+  margin-left: 1rem;
+  margin-right: 1rem;
+}
+
+.addP{
+  outline: none;
+  border: none;
+}
+
+.managePbtn{
+  text-align: center;
+  width: 1.5rem;
+  height: 1.5rem;
+  transition: all 0.2s;
+  font-size: 1rem;
+  border-radius: 10%;
+}
+.managePbtn:hover{
+  background-color: rgb(210, 255, 156);
+  cursor: pointer;
+}

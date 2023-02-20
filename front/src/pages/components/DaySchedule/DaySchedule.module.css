@@ -1,0 +1,27 @@
+.daySche{
+  width: 3rem;
+  display: flex;
+  flex-direction: column;
+}
+.sell {
+  background-color: white;
+  height: 0.75rem;
+  border-bottom: 0.05rem dotted;
+  transition: all 0.2s;
+  box-sizing: border-box;
+}
+.comment {
+  position:absolute;
+  top: -1rem;
+  color: rgba(135, 135, 135, 0);
+  background-color: rgba(0, 255, 255, 0);
+  border: 0.1rem solid rgb(0, 255, 255, 0);
+  border-radius: 10%;
+  transition: all 0.2s;
+}
+.sellSet:hover .comment {
+  top: auto;
+  color: rgb(135, 135, 135);
+  background-color: rgba(0, 255, 255, 0.591);
+  border: 0.1rem solid rgb(0, 255, 255);
+}
