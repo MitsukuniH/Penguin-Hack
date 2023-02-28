@@ -15,21 +15,23 @@ type Sche = {
 }
 /* testdata */
 
-export const DaySchedule: React.FC<{
+export const DaySchedules: React.FC<{
   dayOfWeek: DayOfWeek,
   numOfPeople: number,
   serverUrl: string,
   reload: boolean,
+  userIds: number[]
 }> = ({
   dayOfWeek,
   numOfPeople,
   serverUrl,
-  reload
+  reload,
+  userIds
 })=>{
   const [events, setEvents] = useState<Sche[]>([]);
   const fecthSchedule = async ()=>{
-    const date = useDateOnDOW(dayOfWeek)
-    const userId = localStorage.getItem("UserId")
+    setEvents([])
+    userIds.forEach(async(userId)=>{const date = useDateOnDOW(dayOfWeek)
     const data = {
       ownerId: userId,
       date: date
@@ -47,8 +49,10 @@ export const DaySchedule: React.FC<{
     }
     const jsonData = await response.json();
     if(jsonData === undefined) return
-    setEvents(jsonData)
-    // console.log(jsonData);
+    const a = [...events, ...jsonData]
+    setEvents(a)
+    console.log(a)
+  })
   }
   useEffect(()=>{fecthSchedule()} ,[reload])
   //開始時間を(0~48)で管理する配列

@@ -1,5 +1,7 @@
 import React, { useState } from "react"
 import styles from "@/pages/components/CreateEvent/CreateEvent.module.css"
+import { ScheduleTable } from "../ScheduleTable";
+import { SchedulesTable } from "../SchedulesTable";
 
 export const CreateEvent: React.FC<{
   serverUrl: string
@@ -7,6 +9,7 @@ export const CreateEvent: React.FC<{
   serverUrl
 })=>{
   const today = new Date();
+  const [reload, setReload] = useState<boolean>(true);
   const [tm, td] = [today.getMonth()+1, today.getDate()]
 
   const [title, setTitle] = useState<string>("");
@@ -16,14 +19,26 @@ export const CreateEvent: React.FC<{
   const [endTime, setEndTime] = useState<string>("");
   const [participant, setParticipant] = useState<string>("");
   const [participants, setParticipants] = useState<string[]>([]);
+  const [participantIds, setParticipantIds] = useState<number[]>([]);
+
   
-  const handleAddParticipant = ()=>{
-    if(participant.length < 1) {
+  const handleAddParticipant = async ()=>{
+    const requestOptions = {
+      method: "GET"
+    };
+    console.log(serverUrl + "userNames/" + participant)
+    const response = await fetch(serverUrl +"userNames/" + participant, requestOptions);
+    if(response.status != 200){
       alert("参加者が見つかりません");
       return;
     }
-    setParticipants(participants=>[...participants, participant]);
+    const jsonData = await response.json();
+    console.log(jsonData)
+    
+    setParticipants(participants=>[...participants, jsonData.name]);
+    setParticipantIds(participantIds=>[...participantIds, jsonData.id]);
     setParticipant("");
+    setReload(re=>!re)
   }
   const handleRemoveParticipant = (name: string)=>{
     const ps: string[] = [];
@@ -120,7 +135,7 @@ export const CreateEvent: React.FC<{
         </div>
       </div>
       <div>
-        schedule
+        <SchedulesTable serverUrl={serverUrl} reload={reload} userIds={participantIds}/>
       </div>
     </div>
   )

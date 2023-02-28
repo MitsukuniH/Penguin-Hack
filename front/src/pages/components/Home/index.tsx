@@ -1,4 +1,4 @@
-import { useToDOWFromDate } from "@/Hooks";
+import { useDateOnDOW, useToDOWFromDate } from "@/Hooks";
 import styles from "@/pages/components/Home/Home.module.css"
 import { PublicEvent } from "@/types";
 import React, { useEffect, useState } from "react";

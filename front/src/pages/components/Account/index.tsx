@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react"
+import styles from "@/pages/components/Account/Account.module.css"
 
 export const Account: React.FC<{
   serverUrl: string
@@ -8,6 +9,7 @@ export const Account: React.FC<{
   const [userName, setUserName] = useState<string>("")
   const [friends, setFriends] = useState<string[]>([])
   const [users, setUsers] = useState<string[]>([])
+  const [reload, setReload] = useState<boolean>(false)
 
   const getFriends = async ()=>{
     const userId = localStorage.getItem("UserId")
@@ -23,7 +25,7 @@ export const Account: React.FC<{
     const jsonData = await response.json();
     setFriends(jsonData);
   }
-  useEffect(()=>{getFriends()},[])
+  useEffect(()=>{getFriends()},[reload])
   
   const searchUser = async ()=>{
     const requestOptions = {
@@ -58,9 +60,15 @@ export const Account: React.FC<{
     }
     const jsonData = await response.json();
     console.log(jsonData);
+    setReload(r => !r)
+  }
+  const isFriend = (name: string)=>{
+    for(let i = 0;i < friends.length; ++i){
+      if(friends[i]===name) return true
+    }
   }
   return(
-    <div>
+    <div className={styles.account}>
       <div>
         <div>フレンド一覧</div>
         {friends.map(f=><div>{f}</div>)}
@@ -68,7 +76,10 @@ export const Account: React.FC<{
       <div>
         <div>ユーザー検索</div>
         <input value={userName} onChange={e=>setUserName(e.target.value)}/>
-        {users.map(f=><div>{f}<div onClick={()=>{registarFriend(f)}}>+</div></div>)}
+        {users.map(f=>(
+        <div className={styles.friend}>{f}
+          {isFriend(f)?<div>Friend!</div>:<div onClick={()=>{registarFriend(f)}}>+</div>}
+        </div>))}
       </div>
     </div>
     

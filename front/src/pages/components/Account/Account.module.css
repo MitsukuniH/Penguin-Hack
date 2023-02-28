@@ -1,0 +1,9 @@
+.account{
+  display: grid;
+  grid-template-columns: 10rem 10rem;
+}
+
+.friend{
+  display: grid;
+  grid-template-columns: 1fr 2rem;
+}

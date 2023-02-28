@@ -1,14 +1,16 @@
 import { DayOfWeek } from "@/types";
-import { DaySchedule } from "../DaySchedule";
+import { DaySchedules } from "../DaySchedules";
 import styles from "@/pages/components/ScheduleTable/ScheduleTable.module.css"
 import React from "react";
 
-export const ScheduleTable: React.FC<{
+export const SchedulesTable: React.FC<{
   serverUrl: string,
   reload: boolean,
+  userIds: number[]
 }> = ({
   serverUrl,
-  reload
+  reload,
+  userIds
 }) =>{
   const weeks: DayOfWeek[] = ["sun", "mon", "tue", "wed", "thu", "fri", "sat"];
   const hours: number[] = new Array<number>(24).fill(0).map((h, i)=>h + i)
@@ -29,7 +31,7 @@ export const ScheduleTable: React.FC<{
           {hours.map((h, i)=><div key={i} className={styles.hour}>{h}</div>)}
             </div>
           </td>
-          {weeks.map((w, i)=><td key={i}><DaySchedule dayOfWeek={w} numOfPeople={1} serverUrl={serverUrl} reload={reload}/></td>)}
+          {weeks.map((w, i)=><td key={i}><DaySchedules dayOfWeek={w} numOfPeople={userIds.length} serverUrl={serverUrl} reload={reload} userIds={userIds}/></td>)}
         </tr>
         </tbody>
       </table>
