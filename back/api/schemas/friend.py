@@ -5,11 +5,11 @@ class FriendBase(BaseModel):
   userId: int
   friendId: int
 
-class Friend(FriendBase):
-  id: int
-
   class Config:
     orm_mode = True
+
+class Friend(FriendBase):
+  id: int
 
 class RegistarFriend(FriendBase):
   pass

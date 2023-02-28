@@ -6,6 +6,7 @@ import { Main } from '@/pages/components/Main'
 import { useState } from 'react'
 import { Tab } from '@/types'
 
+const serverUrl="http://localhost:8000/"
 
 export default function Home() {
   const [tab, setTab] = useState<Tab>("home");
@@ -18,10 +19,10 @@ export default function Home() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <main className={styles.body}>
-        <Header/>
+        <Header serverUrl={serverUrl}/>
         <div className={styles.contents}>
           <Sidebar curTab={tab} setTab={setTab}/>
-          <Main curTab={tab}/>
+          <Main curTab={tab} serverUrl={serverUrl}/>
         </div>
         
       </main>

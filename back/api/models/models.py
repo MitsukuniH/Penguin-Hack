@@ -3,12 +3,19 @@ from sqlalchemy.orm import relationship
 
 from api.db import Base
 
-Friend = Table(
-    'friend', Base.metadata,
-    Column("id", Integer, primary_key=True, autoincrement=True),
-    Column('userId', Integer, ForeignKey('users.id')),
-    Column('friendId', Integer, ForeignKey('users.id'))
-    )
+# Friend = Table(
+#     'friend', Base.metadata,
+#     Column("id", Integer, primary_key=True, autoincrement=True),
+#     Column('userId', Integer, ForeignKey('users.id')),
+#     Column('friendId', Integer, ForeignKey('users.id'))
+# )
+
+class Friend(Base):
+  __tablename__ = 'friend'
+  id = Column(Integer, primary_key=True, autoincrement=True)
+  userId = Column(Integer, ForeignKey('users.id'))
+  friendId = Column(Integer, ForeignKey('users.id'))
+
 
 class User(Base):
   __tablename__ = "users"
@@ -17,10 +24,10 @@ class User(Base):
   name = Column(String(64), unique=True)
   password = Column(String(16))
 
-  parents = relationship(
-    'User',secondary=Friend,
-    primaryjoin=Friend.c.userId==id,
-    secondaryjoin=Friend.c.friendId==id,
+  friend = relationship(
+    'User',secondary=Friend.__tablename__,
+    primaryjoin=Friend.userId==id,
+    secondaryjoin=Friend.friendId==id,
     backref="children")
   
   event = relationship("Event", back_populates="user")
@@ -55,8 +62,9 @@ class Event(Base):
 class Participant(Base):
   __tablename__ = "participants"
 
-  eventId = Column(Integer, ForeignKey("events.id"), primary_key=True, index=True)
-  participantId = Column(Integer, ForeignKey("users.id"), primary_key=True)
+  id = Column(Integer, primary_key=True, autoincrement=True)
+  eventId = Column(Integer, ForeignKey("events.id"), index=True)
+  participantId = Column(Integer, ForeignKey("users.id"))
 
   user = relationship("User", back_populates="participant")
   event = relationship("Event", back_populates="participant")

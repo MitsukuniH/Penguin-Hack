@@ -16,26 +16,79 @@ async def CreateEvent(
   await db.refresh(event)
   return event
 
-async def GetEvents(
+async def GetEventsOnUser(
   db: AsyncSession, userId: int
-) -> List[models.Event]:
+) -> Optional[list[Tuple[int, str, int, bool, str, str, str]]]:
   events :Result = await db.execute(
-    select(models.Event).filter(models.Event.ownerId==userId)
+    select(
+      models.Event.id,
+      models.Event.title,
+      models.Event.ownerId,
+      models.Event.isOnce,
+      models.Event.date,
+      models.Event.start,
+      models.Event.end
+    ).filter(models.Event.ownerId==userId)
   )
-  print("DEBUG------------")
-  print(events)
-  res = map(event_schema.Event.from_orm, events.all())
-  # result = list(map(event_schema.Event.from_orm, events.all()))
-  print(res)
-  result = list(res)
-  print("DEGUB END--------------")
-  return result
+  return events.all()
 
-# async def GetEvents(
-#   db: AsyncSession, userId: int
-# ) -> List[Tuple[int]]:
-#   events :Result = await db.execute(
-#     select(models.Event.ownerId).filter(models.Event.ownerId==userId)
-#   )
-#   event = events.all()
-#   return events.all() if events is not None else None
+async def GetEventsOnDate(
+  db: AsyncSession, data: event_schema.GetEventOnDate
+) -> Optional[list[Tuple[int, str, int, bool, str, str, str]]]:
+  events :Result = await db.execute(
+    select(
+      models.Event.id,
+      models.Event.title,
+      models.Event.ownerId,
+      models.Event.isOnce,
+      models.Event.date,
+      models.Event.start,
+      models.Event.end
+    ).filter(models.Event.ownerId==data.ownerId).filter(models.Event.date==data.date)
+  )
+  return events.all()
+
+async def GetEventsWithoutTitleOwner(
+  db: AsyncSession, userId: int
+) -> Optional[list[Tuple[int, str, int, bool, str, str, str]]]:
+  events :Result = await db.execute(
+    select(
+      models.Event.id,
+      models.Event.isOnce,
+      models.Event.date,
+      models.Event.start,
+      models.Event.end
+    ).filter(models.Event.ownerId==userId).filter(models.Event.title==None)
+  )
+  return events.all()
+
+async def GetEventsWithoutNoneTitle(
+  db: AsyncSession, userId: int
+) -> Optional[list[Tuple[int, str, int, bool, str, str, str]]]:
+  events :Result = await db.execute(
+    select(
+      models.Event.id,
+      models.Event.title,
+      models.Event.ownerId,
+      models.Event.isOnce,
+      models.Event.date,
+      models.Event.start,
+      models.Event.end
+    ).filter(models.Event.ownerId==userId).filter(models.Event.title!=None)
+  )
+  return events.all()
+
+async def GetEvent(
+  db: AsyncSession, eventId: int
+) -> Optional[event_schema.Event]:
+  result :Result = await db.execute(
+    select(models.Event).filter(models.Event.id==eventId)
+  )
+  event = result.first()
+  return event[0] if event is not None else None
+
+async def RemoveEvent(
+  db: AsyncSession, original: event_schema.Event
+) -> None:
+  await db.delete(original)
+  await db.commit()

@@ -46,7 +46,7 @@
   border: none;
 }
 
-.managePbtn{
+.addPbtn{
   text-align: center;
   width: 1.5rem;
   height: 1.5rem;
@@ -54,7 +54,31 @@
   font-size: 1rem;
   border-radius: 10%;
 }
-.managePbtn:hover{
+.addPbtn:hover{
+  background-color: rgb(210, 255, 156);
+  cursor: pointer;
+}
+
+.removePbtn{
+  text-align: center;
+  width: 1.5rem;
+  height: 1.5rem;
+  transition: all 0.2s;
+  font-size: 1rem;
+  border-radius: 10%;
+}
+.removePbtn:hover{
+  background-color: rgb(255, 156, 156);
+  cursor: pointer;
+}
+.createBtn{
+  padding: 0.5rem;
+  font-size: large;
+  border-bottom: 0.1rem solid;
+  text-align: center;
+  transition: all 0.2s;
+}
+.createBtn:hover{
   background-color: rgb(210, 255, 156);
   cursor: pointer;
 }

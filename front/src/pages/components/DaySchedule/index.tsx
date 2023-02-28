@@ -1,37 +1,63 @@
 import styles from "@/pages/components/DaySchedule/DaySchedule.module.css"
 import { DayOfWeek } from "@/types"
+import { useDateOnDOW } from "@/Hooks"
+import { useEffect, useState } from "react"
 
 /* testdata */
 type Sche = {
+  title: string,
   isOnce: boolean,
+  ownerId: number,
   date: string,
   day: DayOfWeek,
   start: string,
   end: string
 }
-const allSches: Sche[] = [
-  {isOnce: true, date: "2026-02-21", day: "tue", start: "16:00", end: "20:30"},
-  {isOnce: true, date: "2026-02-21", day: "tue", start: "13:00", end: "18:30"},
-  {isOnce: false, date: "2026-02-23", day: "thu", start: "11:46", end: "13:10"},
-] 
 /* testdata */
 
 export const DaySchedule: React.FC<{
   dayOfWeek: DayOfWeek,
-  numOfPeople: number
+  numOfPeople: number,
+  serverUrl: string,
+  reload: boolean
 }> = ({
   dayOfWeek,
-  numOfPeople
+  numOfPeople,
+  serverUrl,
+  reload
 })=>{
-  //その曜日のイベントが入った配列、インデックスをidとする
-  const toSche = allSches.filter(s=>s.day===dayOfWeek);
+  const [events, setEvents] = useState<Sche[]>([]);
+  const fecthSchedule = async ()=>{
+    const date = useDateOnDOW(dayOfWeek)
+    const userId = localStorage.getItem("UserId")
+    const data = {
+      ownerId: userId,
+      date: date
+    };
+    // console.log(data)
+    const requestOptions = {
+      method: "POST",
+      headers:{"Content-Type": "application/json"},
+      body: JSON.stringify(data)
+    };
+    const response = await fetch(serverUrl + "eventListOnDate", requestOptions);
+    if(response.status != 200){
+      console.log("error")
+      return;
+    }
+    const jsonData = await response.json();
+    if(jsonData === undefined) return
+    setEvents(jsonData)
+    // console.log(jsonData);
+  }
+  useEffect(()=>{fecthSchedule()} ,[reload])
   //開始時間を(0~48)で管理する配列
-  const startTimes = toSche.map((s,i)=>{
+  const startTimes = events.map((s,i)=>{
     const tStr = s.start.split(":").map(v=>parseInt(v));
     return {time:tStr[0] * 2 + ((tStr[1] < 15)?0:(tStr[1] > 45)?2:1), id:i};
   })
   //終了時間を(0~48)で管理する配列
-  const endTimes = toSche.map(s=>{
+  const endTimes = events.map(s=>{
     const tStr = s.end.split(":").map(v=>parseInt(v));
     return tStr[0] * 2 + ((tStr[1] < 15)?0:(tStr[1] > 45)?2:1);
   })
@@ -50,7 +76,7 @@ export const DaySchedule: React.FC<{
   return(
     <div className={styles.daySche}>
       {fillTimes.map((t, i)=>(
-      <div>{
+      <div key={i}>{
         t.overlap===0?
         <div className={styles.sell} key={i} style={{backgroundColor:"#fff"}}></div>
         :OLRate(t.overlap)>1?
@@ -61,7 +87,7 @@ export const DaySchedule: React.FC<{
         :
         <div className={styles.sellSet}>
         <div className={styles.sell} key={i} style={{backgroundColor:`rgba(70,120,70,${OLRate(t.overlap)})`}}></div>
-        <div className={styles.comment}>{toSche[t.id].start} ~ {toSche[t.id].end}</div>
+        <div className={styles.comment}>{events[t.id].start} ~ {events[t.id].end}</div>
         </div>
       }</div>))}
     </div>

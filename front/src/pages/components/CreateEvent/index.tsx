@@ -1,12 +1,16 @@
-import { useState } from "react"
+import React, { useState } from "react"
 import styles from "@/pages/components/CreateEvent/CreateEvent.module.css"
 
-export const CreateEvent = ()=>{
+export const CreateEvent: React.FC<{
+  serverUrl: string
+}> = ({
+  serverUrl
+})=>{
   const today = new Date();
   const [tm, td] = [today.getMonth()+1, today.getDate()]
 
   const [title, setTitle] = useState<string>("");
-  const [format, setFormat] = useState<string>("once");
+  const [isOnce, setIsOnce] = useState<boolean>(true);
   const [date, setDate] = useState<string>(today.getFullYear()+"-"+(tm<10?"0"+tm:tm)+"-"+(td<10?"0"+td:td));
   const [startTime, setStartTime] = useState<string>("");
   const [endTime, setEndTime] = useState<string>("");
@@ -28,36 +32,64 @@ export const CreateEvent = ()=>{
     })
     setParticipants(ps);
   }
+  const handleSubmit = async () =>{
+    const userId = localStorage.getItem("UserId");
+    const data = {
+      title: title,
+      isOnce: isOnce,
+      ownerId: userId,
+      date: date,
+      start: startTime,
+      end: endTime
+    };
+    // console.log(data)
+    const requestOptions = {
+      method: "POST",
+      headers:{"Content-Type": "application/json"},
+      body: JSON.stringify(data)
+    };
+    const response = await fetch(serverUrl + "createEvent", requestOptions);
+    if(response.status != 200){
+      console.log("Error");
+      return;
+    }
+    setTitle("")
+    setIsOnce(true)
+    setDate("")
+    setStartTime("")
+    setEndTime("")
+  }
   return(
     <div className={styles.createEvent}>
       <div className={styles.info}>
         <div className={styles.title}>Info</div>
+        <div className={styles.createBtn} onClick={handleSubmit}>作成</div>
         <div className={styles.itemName}>イベント名</div>
         <input className={styles.itemForm} type="text" value={title} onChange={e=>setTitle(e.target.value)}/>
 
         <label className={styles.itemName}>
-        <input type="radio" name="format" value="once" checked={format==="once"} onChange={e=>setFormat(e.target.value)}/>
+        <input type="radio" name="isOnce" value="once" checked={isOnce} onChange={e=>setIsOnce(true)}/>
         単発開催
         </label>
 
         <div className={styles.itemName}>日付</div>
         <div>
-        <input className={styles.itemForm} type="date" disabled={format!=="once"} value={date} onChange={e=>setDate(e.target.value)}/>
+        <input className={styles.itemForm} type="date" disabled={!isOnce} value={date} onChange={e=>setDate(e.target.value)}/>
         </div>
 
         <div className={styles.itemName}>時間帯</div>
         <div>
-          <input className={styles.itemForm} type="time" disabled={format!=="once"} value={startTime} onChange={e=>setStartTime(e.target.value)}/>
+          <input className={styles.itemForm} type="time" disabled={!isOnce} value={startTime} onChange={e=>setStartTime(e.target.value)}/>
           ~
-          <input className={styles.itemForm} type="time" disabled={format!=="once"} value={endTime} onChange={e=>setEndTime(e.target.value)}/>
+          <input className={styles.itemForm} type="time" disabled={!isOnce} value={endTime} onChange={e=>setEndTime(e.target.value)}/>
         </div>
 
         <label className={styles.itemName}>
-          <input type="radio" name="format" value="regular" checked={format==="regular"} onChange={e=>setFormat(e.target.value)}/>
+          <input type="radio" name="isOnce" value="regular" checked={!isOnce} onChange={e=>setIsOnce(false)}/>
           連続開催
         </label>
         <div className={styles.itemName}>曜日</div>
-        <select disabled={format==="once"} className={styles.itemForm}>
+        <select disabled={isOnce} className={styles.itemForm}>
           <option value="sun">日曜</option>
           <option value="mon">月曜</option>
           <option value="tue">火曜</option>
@@ -69,9 +101,9 @@ export const CreateEvent = ()=>{
 
         <div className={styles.itemName}>時間帯</div>
         <div>
-            <input className={styles.itemForm} type="time" disabled={format==="once"} value={startTime} onChange={e=>setStartTime(e.target.value)}/>
+            <input className={styles.itemForm} type="time" disabled={isOnce} value={startTime} onChange={e=>setStartTime(e.target.value)}/>
             ~
-            <input className={styles.itemForm} type="time" disabled={format==="once"} value={endTime} onChange={e=>setEndTime(e.target.value)}/>
+            <input className={styles.itemForm} type="time" disabled={isOnce} value={endTime} onChange={e=>setEndTime(e.target.value)}/>
           <div className={styles.pList}>
             <div className={styles.itemName}>参加者</div>
             <div className={styles.participant}>

@@ -53,3 +53,30 @@
   margin-top: 1rem;
   align-items: center;
 }
+
+.event{
+  display: grid;
+  grid-template-columns: 3rem 1fr 2rem;
+  border-bottom: 0.1rem solid;
+  box-sizing: border-box;
+}
+
+.eventDay{
+  text-align: center;
+  border-right: 0.1rem dotted;
+  background-color: rgb(210, 255, 156);
+}
+
+.removeBtn{
+  width: 2rem;
+  text-align: center;
+  width: 1.5rem;
+  height: 1.5rem;
+  transition: all 0.2s;
+  font-size: 1rem;
+  border-radius: 10%;
+}
+.removeBtn:hover{
+  background-color: rgb(255, 156, 156);
+  cursor: pointer;
+}

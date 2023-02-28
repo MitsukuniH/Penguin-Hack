@@ -16,3 +16,19 @@ class CreateUser(UserBase):
 
 class CreateUserResponse(User):
   pass
+
+class UserWithoutPass(BaseModel):
+  id: int
+  name: Optional[str] = Field(None)
+
+  class Config:
+    orm_mode = True
+
+class UserName(BaseModel):
+  name: Optional[str] = Field(None)
+
+  class Config:
+    orm_mode = True
+
+class AuthUser(UserBase):
+  pass

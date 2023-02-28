@@ -5,21 +5,31 @@ import { CreateEvent } from "../CreateEvent"
 import { EditSchedule } from "../EditSchedule"
 import { EventList } from "../EventList"
 import styles from "@/pages/components/Main/Main.module.css"
+import { useEffect, useState } from "react"
 
 export const Main: React.FC<{
-  curTab: Tab
+  curTab: Tab,
+  serverUrl: string,
 }> = ({
-  curTab
+  curTab,
+  serverUrl,
 })=>{
-  
+  const [isSigned, setIsSigned] = useState(false);
+  const [scheduleReload, setScheduleReload] = useState<boolean>(true);
+  useEffect(()=>{
+    const userId = localStorage.getItem("UserId")
+    setIsSigned(userId!==null)
+  })
+  console.log(isSigned)
   return (
     <div>{
+      !isSigned?<h1>ログインしてください</h1>:
       curTab==="home"?
-        <Home/>:curTab==="edit schedule"?
-        <EditSchedule/>:curTab==="create event"?
-        <CreateEvent/>:curTab==="events list"?
-        <EventList/>:
-        <Account/>
+        <Home serverUrl={serverUrl}/>:curTab==="edit schedule"?
+        <EditSchedule serverUrl={serverUrl} reload={scheduleReload} setReload={setScheduleReload}/>:curTab==="create event"?
+        <CreateEvent serverUrl={serverUrl}/>:curTab==="events list"?
+        <EventList serverUrl={serverUrl}/>:
+        <Account serverUrl={serverUrl}/>
       }
     </div>
   )
